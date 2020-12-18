@@ -8,10 +8,16 @@ from asso_tn.utils import make_timed_token
 from django.utils.crypto import get_random_string
 from time import sleep
 from captcha.models import CaptchaStore
+
+from django.conf import settings
 # Create your tests here.
 
 
 class UserTest(TestCase):
+
+    def setUp(self):
+        settings.ROLE = "test"
+        print("setup test")
 
     # Add new user and test site page shown
     def test_add_new_user(self):
@@ -28,14 +34,13 @@ class UserTest(TestCase):
         context = { "email": "test1@truc.com",
                      'captcha_0': captcha.hashkey,
                      'captcha_1': captcha.response }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
+        request = self.client.post(reverse("authentication:login"), context)
 
-        # Call .views.login()
-        login_response = views.login(request)
+
 
         # Test good printing of the page
         self.assertInHTML("Un mail est un route pour que vous puissiez confirmer la création de votre compte.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
 
         # Get user and test creation in User table
         try:
@@ -70,14 +75,11 @@ class UserTest(TestCase):
         context = { "email": "test1@truc.com",
                      'captcha_0': captcha.hashkey,
                      'captcha_1': captcha.response }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Un mail est un route pour que vous puissiez confirmer la création de votre compte.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
         
         # Get user and test creation in User table
         try:
@@ -112,14 +114,11 @@ class UserTest(TestCase):
         context = { "email": "test1@truc.com",
                      'captcha_0': captcha.hashkey,
                      'captcha_1': captcha.response }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-        
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Un mail est un route avec un lien magique qui vous permettra de vous connecter.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
         
     # Minimum of 2 user with the same mail in database and test site page shown
     def test_two_users_with_same_mail(self):
@@ -149,13 +148,10 @@ class UserTest(TestCase):
         context = { "email": "test@truc.com",
                      'captcha_0': captcha.hashkey,
                      'captcha_1': captcha.response }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-        
-        # Call .views.login()
-        login_response = views.login(request)
-        
+        request = self.client.post(reverse("authentication:login"), context)
+
         # Test printed error message
-        self.assertIn(login_response.content.decode("utf-8"), "Data error: Multiple email addresses found")
+        self.assertIn(request.content.decode("utf-8"), "Data error: Multiple email addresses found")
 
     # TODO Test user with password, one user, multiple users with same/different mail
     # TODO Test with one password and both passwords
@@ -176,14 +172,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "secret_password" }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Un mail est un route pour que vous puissiez confirmer la création de votre compte.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
 
         # Get user and test creation in User table
         try:
@@ -220,14 +213,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "secret_password", }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Un mail est un route pour que vous puissiez confirmer la création de votre compte.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
         
         # Get user and test creation in User table
         try:
@@ -288,14 +278,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "" }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Veuillez entrer à nouveau le mot de passe.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
 
         # Get user and test creation in User table
         try:
@@ -332,14 +319,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "", }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Veuillez entrer à nouveau le mot de passe.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
         
         # Get user and test creation in User table
         try:
@@ -400,14 +384,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "password_secret" }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-
-        # Call .views.login()
-        login_response = views.login(request)
+        request = self.client.post(reverse("authentication:login"), context)
 
         # Test good printing of the page
         self.assertInHTML("Les mots de passe ne sont pas identiques.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
 
         # Get user and test creation in User table
         try:
@@ -444,14 +425,11 @@ class UserTest(TestCase):
                      'captcha_1': captcha.response,
                      'password1': "secret_password",
                      'password2': "password_secret", }
-        request = RequestFactory().post(reverse("authentication:login"), context, follow=True)
-        
-        # Call .views.login()
-        login_response = views.login(request)
-        
+        request = self.client.post(reverse("authentication:login"), context)
+
         # Test good printing of the page
         self.assertInHTML("Les mots de passe ne sont pas identiques.",
-            login_response.content.decode("utf-8"))
+            request.content.decode("utf-8"))
         
         # Get user and test creation in User table
         try:

@@ -34,11 +34,11 @@ ul.no-bullet-list {
 }
 /*
   Colours:
-    #7F6966;    gris
-    #DDE5ED;    rouge
-    #5BC2E7;    bleu
-    #FA4616;    orange
-    #44536D;    vert
+    #5BC2E7;    bleu	   - rvb 91-194-231
+    #333F48;    bleufonce  - rvb 51-63-72
+    #DDE5ED;    grisclair  - rvb 221-229-237
+    #FA4616;    orange     - rvb 250-70-22
+    #7F6966;    gris       - rvb 127-105-102
 */
 .background-gray {
     background-color: #7F6966;
@@ -57,6 +57,9 @@ ul.no-bullet-list {
 }
 .background-ad-hoc-blue {
     background-color: #EAF3FC;
+}
+.background-dark-blue {
+    background-color: #333F48;
 }
 
 
